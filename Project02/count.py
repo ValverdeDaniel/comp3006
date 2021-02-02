@@ -30,9 +30,10 @@ def add_frequencies(d, file, remove_case):
         text = text.lower()
     #print('text: ',text)
 
-    add_frequencies('text.txt', False)
+
 
 def main():
+    add_frequencies('text.txt', False)
 
     f = open(sys.argv[1],"r")
     contents = f.read()

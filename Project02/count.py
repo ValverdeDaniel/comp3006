@@ -1,261 +1,85 @@
-#Daniel Valverde
-#592378718
-
-#how to run in command line examples:
-    #python count.py text.txt -c
-        #reads text.txt counts letters a and A separately (case sensitive)
-    #python count.py text.txt -l abccdd
-        #reads through text.txt and counts only the letters specified ignores case sensitivity
-    #python count.py text.txt -z
-        #reads text.txt and counts the letters in the file but displays entire alphabet
-        #including those that are not in file
-    #python count.py text.txt -c -l aAbb
-        #reads through text.txt and counts only the letters specified is case sensitive
-    #python count.py text.txt -cz
-        #
-    #python count.py text.txt
-        #reads text.txt counts letters a and A as the same character
-
-#reads in 1 text file specified in command line
-##TODO: read in more than one text file
-
+#!/usr/bin/env python3
+## Max Roschke
+## Data Science 2, Project 01, Counting Characters -- Reference Implementation
 import sys
+import string
 
-#3 add_frequencies
-def add_frequencies(d, file, remove_case):
-    file = open(file, mode = 'r')
-    text = file.read()
-    file.close()
-    if remove_case is True:
-        text = text.lower()
-    #print('text: ',text)
+## function to do the counting
+def add_frequencies(d, f, remove_case):
+   '''Adds the character frequencies of the given text file to the given
+   dictionary.
 
+   Arguments:
+      d (dict): map from characters (str) to frequency counts (int)
+      f (file): text file to read characters from
+      remove_case (bool): if true, runs .lower() on chars before mapping
+   '''
+   ## iterate through the file, char-by-char
+   for line in f:
+      for c in line:
+         ## convert c to key (use 'remove_case' to check for lower-casing)
+         key = c.lower() if remove_case else c
 
+         ## increment that char in the dictionary
+         if key in d:
+            d[key] += 1
+         else:
+            d[key] = 1
 
+   ## return that dictionary (unnecessary, but matches intuition when calling)
+   return d
+
+## main function
 def main():
-    add_frequencies('text.txt', False)
+   '''Prints out the frequencies of various characters in input files. Uses
+   sys.argv to determine what those characters are, and which input files to
+   read from.'''
 
-    f = open(sys.argv[1],"r")
-    contents = f.read()
-    f.close()
+   ## default settings
+   output_chars = string.ascii_letters
+   remove_case = True
+   print_zeroes = False
 
-    #1. Parse the command line arguments -c, -l, -z
-    #checking for arguments and flags
-    arguments = []
-    for i in sys.argv:
-        arguments.append(i)
-    #print('arguments', arguments)
-    #finding all flags by looking through arguments for anything starting with a '-'
-    #this process allows you to input flags as -c or -cl or -c -l
-    flags = [i for i in arguments if '-' in i]
-    #removing all '-' from flags list
-    flags = [x.replace('-', '') for x in flags]
-    flagsstr = " "
-    flagsstr = flagsstr.join(flags)
-    flags = [i for i in flagsstr]
-    if ' ' in flags:
-        flags.remove(' ')
-    flags.sort()
-    #print('flags2', flags)
+   ## get "real arguments".  that is, ignore the script name
+   args = sys.argv[1:]
 
-    #2. create an empty Dictionary
-    lettersCountDict = {}
+   ## process the leading flags
+   while args and args[0].startswith('-'):
+      ## remove the next flag from the list
+      arg = args.pop(0)
 
-    if ['c'] == flags:
-        #print('we have a c')
-        allLetters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        cleanContents = ""
-        lettersList = []
-        uniqueLetters = []
-        lettersCount = []
-        for char in contents:
-            if char in allLetters:
-                cleanContents += char
-        #print('cleanContents:', cleanContents)
-        lettersList = [char for char in cleanContents]
-        #print('lettersList: ',lettersList)
-        S1 = set(lettersList)
-        uniqueLetters = list(S1)
-        uniqueLetters.sort()
-        for x in range(len(uniqueLetters)):
-            lettersCount.append(lettersList.count(uniqueLetters[x]))
-        lettersCountDict = {uniqueLetters[i]: lettersCount[i] for i in range(len(uniqueLetters))}
-        #print('uniqueLetters: ', uniqueLetters)
-        #print('lettersCount: ', lettersCount)
-        #print('lettersCountDict: ', lettersCountDict)
+      ## handle that flag
+      if arg == '-c':
+         remove_case = False
+      elif arg == '-l':
+         output_chars = args.pop(0)
+      elif arg == '-z':
+         print_zeroes = True
+      elif arg == '--':
+         break
+      else:
+         ## unknown argument!
+         print(f'unknown argument: \'{arg}\'', file=sys.stderr)
 
-        #4. Print out the elements of that dictionary in CSV FORMAT
-        csvFormat = ""
-        for key, value in lettersCountDict.items():
-            csvFormat = csvFormat + '"' + key + '"' + "," + str(value) + "\n"
-        print(csvFormat)
+   ## if we have to remove the case, remove it from the output_chars first!
+   if remove_case:
+      output_chars = ''.join(c for c in output_chars if c.islower())
 
-    if ['c','l'] == flags:
-        #print(' we have a c and an l')
-        #creating an ldict list for potential use with -l argument
-        lDictList = arguments
-        lDictList = [ x for x in lDictList if "-" not in x ]
-        lDictList = [ x for x in lDictList if ".py" not in x ]
-        lDictList = [ x for x in lDictList if ".txt" not in x ]
-        lDictStr = ""
-        lDictStr = lDictStr.join(lDictList)
-        lDictList = [i for i in lDictStr]
-        #print('lDictList: ', lDictList)
-        #checking for characters from files; and declaring lists and dicts
-        lettersCountDict = {}
-        allowedKeys = lDictList
-        cleanContents = ""
-        lettersList = []
-        lettersCount = []
-        #converting allowedKeys to a list
-        myKeys = [char for char in allowedKeys]
-        #print(myKeys)
-        #cleaning up the contents from the .txt files
-        for char in contents:
-            if char in allowedKeys:
-                cleanContents += char
-        #print('cleanContents:', cleanContents)
-        lettersList = [char for char in cleanContents]
-        #adding the count to the list lettersList
-        for x in range(len(myKeys)):
-            lettersCount.append(lettersList.count(myKeys[x]))
-        lettersCountDict = {myKeys[i]: lettersCount[i] for i in range(len(myKeys))}
-        # print('myKeys: ', myKeys)
-        # print('lettersCount: ', lettersCount)
-        # print('lettersCountDict: ', lettersCountDict)
+   ## the remaining arguments must all be files... process them!
+   d = {}
+   for filename in args:
+      with open(filename, 'r') as f:
+         add_frequencies(d, f, remove_case)
 
-        #4. Print out the elements of that dictionary in CSV FORMAT
-        csvFormat = ""
-        for key, value in lettersCountDict.items():
-            csvFormat = csvFormat + '"' + key + '"' + "," + str(value) + "\n"
-        print(csvFormat)
+   ## print out the output characters, as requested, in CSV format
+   for c in output_chars:
+      ## get the frequency count from the dictionary, or zero if not present
+      freq = d[c] if c in d else 0
 
+      ## print that row, if needed (if zero, check print_zeroes first)
+      if freq != 0 or print_zeroes:
+         print(f'"{c}",{freq}')
 
-    if ['c','z'] == flags:
-        # print(' we have a c and a z')
-            #checking for characters from files; and declaring lists and dicts
-        allowedKeys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        cleanContents = ""
-        lettersList = []
-        lettersCount = []
-        #converting allowedKeys to a list
-        myKeys = [char for char in allowedKeys]
-        #print(myKeys)
-        #cleaning up the contents from the .txt files
-        for char in contents:
-            if char in allowedKeys:
-                cleanContents += char
-        #print('cleanContents:', cleanContents)
-        lettersList = [char for char in cleanContents]
-        #adding the count to the list lettersList
-        for x in range(len(myKeys)):
-            lettersCount.append(lettersList.count(myKeys[x]))
-        lettersCountDict = {myKeys[i]: lettersCount[i] for i in range(len(myKeys))}
-        # print('myKeys: ', myKeys)
-        # print('lettersCount: ', lettersCount)
-        # print('lettersCountDict: ', lettersCountDict)
-
-        #4. Print out the elements of that dictionary in CSV FORMAT
-        csvFormat = ""
-        for key, value in lettersCountDict.items():
-            csvFormat = csvFormat + '"' + key + '"' + "," + str(value) + "\n"
-        print(csvFormat)
-
-    if ['c','l','z'] == flags:
-        print('we have a c and l and z')
-
-    if not flags:
-        #print('we have no flags')
-        contents = contents.lower()
-        allLetters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        cleanContents = ""
-        lettersList = []
-        uniqueLetters = []
-        lettersCount = []
-        for char in contents:
-            if char in allLetters:
-                cleanContents += char
-        #print('cleanContents:', cleanContents)
-        lettersList = [char for char in cleanContents]
-        #print('lettersList: ',lettersList)
-        S1 = set(lettersList)
-        uniqueLetters = list(S1)
-        uniqueLetters.sort()
-        for x in range(len(uniqueLetters)):
-            lettersCount.append(lettersList.count(uniqueLetters[x]))
-        lettersCountDict = {uniqueLetters[i]: lettersCount[i] for i in range(len(uniqueLetters))}
-        #print('uniqueLetters: ', uniqueLetters)
-        #print('lettersCount: ', lettersCount)
-        #print('lettersCountDict: ', lettersCountDict)
-
-        #4. Print out the elements of that dictionary in CSV FORMAT
-        csvFormat = ""
-        for key, value in lettersCountDict.items():
-            csvFormat = csvFormat + '"' + key + '"' + "," + str(value) + "\n"
-        print(csvFormat)
-
-    if ['l'] == flags:
-        # print('we have an l')
-
-        #creating an ldict list for potential use with -l argument
-        lDictList = arguments
-        lDictList = [ x for x in lDictList if "-" not in x ]
-        lDictList = [ x for x in lDictList if ".py" not in x ]
-        lDictList = [ x for x in lDictList if ".txt" not in x ]
-        lDictStr = ""
-        lDictStr = lDictStr.join(lDictList)
-        lDictStr = lDictStr.lower()
-        lDictList = [i for i in lDictStr]
-        # print('lDictList: ', lDictList)
-        #checking for characters from files; and declaring lists and dicts
-        contents = contents.lower()
-        lettersCountDict = {}
-        allowedKeys = lDictList
-        cleanContents = ""
-        lettersCount = []
-        #converting allowedKeys to a list
-        myKeys = [char for char in allowedKeys]
-        #cleaning up the contents from the .txt files
-        for char in contents:
-            if char in allowedKeys:
-                cleanContents += char
-        lettersList = [char for char in cleanContents]
-        for x in range(len(myKeys)):
-            lettersCount.append(lettersList.count(myKeys[x]))
-
-        lettersCountDict = {myKeys[i]: lettersCount[i] for i in range(len(myKeys))}
-        csvFormat = ""
-        for key, value in lettersCountDict.items():
-            csvFormat = csvFormat + '"' + key + '"' + "," + str(value) + "\n"
-        print(csvFormat)
-
-    if ['z'] == flags:  #print out lines for characters with frequency of 0
-        #print('we have a z')
-        #checking for characters from files; and declaring lists and dicts
-        contents = contents.lower()
-        lettersCountDict = {}
-        allowedKeys = "abcdefghijklmnopqrstuvwxyz"
-        cleanContents = ""
-        lettersCount = []
-        #converting allowedKeys to a list
-        myKeys = [char for char in allowedKeys]
-        #cleaning up the contents from the .txt files
-        for char in contents:
-            if char in allowedKeys:
-                cleanContents += char
-        lettersList = [char for char in cleanContents]
-        #adding the count to the list lettersList
-        for x in range(len(myKeys)):
-            lettersCount.append(lettersList.count(myKeys[x]))
-        lettersCountDict = {myKeys[i]: lettersCount[i] for i in range(len(myKeys))}
-
-        #4. Print out the elements of that dictionary in CSV FORMAT
-        csvFormat = ""
-        for key, value in lettersCountDict.items():
-            csvFormat = csvFormat + '"' + key + '"' + "," + str(value) + "\n"
-        print(csvFormat)
-
-    if ['l','z'] == flags:
-        print('we have an l and a z')
-
-main()
+## when to run the main function
+if __name__ == '__main__':
+   main()

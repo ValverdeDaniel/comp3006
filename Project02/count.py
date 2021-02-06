@@ -13,7 +13,10 @@ import string
 #PS for combo flags -c needs to come first...sorry its maxs code and i couldnt figure out how to fix it
 #python count.py -c -l abcA text.txt
 
-AmITesting = False
+#DESCRIPTION:
+#This file counts the frequency of letters from text.txt file
+
+AmITesting = True
 #AmITesting = False
 
 

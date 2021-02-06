@@ -45,6 +45,7 @@ def count2Csv():
         print('you have successfully saved to the csv: ', csvFileName)
     except:
         print('make sure that you followed this format: python count_to_csv.py -c -z text.txt sample.csv')
+        print('also make sure that if you are not running a test that AmITesting = False in count.py')
 
 
 def main():

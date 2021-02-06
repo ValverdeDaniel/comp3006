@@ -1,21 +1,8 @@
-   #Daniel Valverde
-   #DU ID: 873527848
-
+#!/usr/bin/env python3
+## Max Roschke
+## Data Science 2, Project 01, Counting Characters -- Reference Implementation
 import sys
 import string
-
-#!!!INSTRUCTIONS!!!
-#IMPORTANT!!! If you are running Tests you will need to set AmITesting = True
-#IMPORTANT!!!if you are trying to run count.py from the command line or running count_to_csv set AmITesting = True
-
-#How To properly run count.py from command line
-#Make sure that AmITesting=False
-#PS for combo flags -c needs to come first...sorry its maxs code and i couldnt figure out how to fix it
-#python count.py -c -l abcA text.txt
-
-AmITesting = False
-#AmITesting = False
-
 
 ## function to do the counting
 def add_frequencies(d, f, remove_case):
@@ -43,7 +30,7 @@ def add_frequencies(d, f, remove_case):
    return d
 
 def counter(args):
-   ## counter function
+   ## main function
    '''Prints out the frequencies of various characters in input files. Uses
    sys.argv to determine what those characters are, and which input files to
    read from.'''
@@ -53,16 +40,12 @@ def counter(args):
    print_zeroes = False
 
    ## get "real arguments".  that is, ignore the script name
-   ##for test
-   # args = []
-   if AmITesting == False:
-      #TOGGLE comment for args below on when running from command line and off for running test_count.py
-      args = sys.argv[1:]
-   else:
-      #TOGGLE comment args below on when running test_count.py and off for running from commnad line
-      args = sys.argv
+   ##toggle for test
+   args = []
 
-   # MAXS LOOPING THROUGH FLAGS
+
+   args = sys.argv
+
    ## process the leading flags
    while args and args[0].startswith('-'):
       ## remove the next flag from the list
@@ -81,7 +64,6 @@ def counter(args):
          ## unknown argument!
          print(f'unknown argument: \'{arg}\'', file=sys.stderr)
 
-
    ## if we have to remove the case, remove it from the output_chars first!
    if remove_case == True:
       output_chars = ''.join(c for c in output_chars if c.islower())
@@ -89,7 +71,6 @@ def counter(args):
 
    ## the remaining arguments must all be files... process them!
    d = {}
-   print('args', args)
    for filename in args:
       with open(filename, 'r') as f:
          d = add_frequencies(d, f, remove_case)
@@ -120,49 +101,32 @@ def counter(args):
 
    ## return based on flag
    # if arg == '-c':
-
-   try:
-      if '-c' in arg:
-         print('we have c')
-         if '\n' in d:
-            del d['\n']
-         dannysDict = d
-      elif '-l' in arg:
-         print('we have l')
-         # to convert lists to dictionary
-         dannysDict = {dannysLZChars[i]: dannysFreq[i] for i in range(len(dannysLZChars))}
-      elif '-z' in arg:
-         print('we have z')
-         # to convert lists to dictionary
-         dannysDict = {dannysLZChars[i]: dannysFreq[i] for i in range(len(dannysLZChars))}
-      elif arg == '--':
-         print('break')
-      else:
-         print('wooops!!!')
-   except NameError:
-      print('we have no flags')
-      arg = False
-      if '\n' in d:
-         del d['\n']
+   if '-c' in arg:
+      print('we have c')
       dannysDict = d
+   elif '-l' in arg:
+      print('we have l')
+      # to convert lists to dictionary
+      dannysDict = {dannysLZChars[i]: dannysFreq[i] for i in range(len(dannysLZChars))}
+   elif '-z' in arg:
+      print('we have z')
+      # to convert lists to dictionary
+      dannysDict = {dannysLZChars[i]: dannysFreq[i] for i in range(len(dannysLZChars))}
+   elif arg == '--':
+      print('break')
    else:
-      arg = True
-      # print('we made it to this else and argTrue')
+      print('shit!!! :(')
 
    return dannysDict
 
 
 def main():
    """this is the main function and we are calling it """
-
-   #this was the in count.py sys.argv spoof
-   # sys.argv = ['-z', 'text.txt']
-   #end TOGGLE
-
+   # sys.argv = ['-l', 'abc', 'text.txt']
    args = sys.argv
-   # print('mainArgs: ',args)
+   print('mainArgs: ',args)
    d= counter(args)
-   print('main dictionary: ',d)
+   print('main: ',d)
    return d
 
 if __name__ == '__main__':

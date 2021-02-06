@@ -32,7 +32,7 @@ def add_frequencies(d, file, remove_case):
 
     add_frequencies('text.txt', False)
 
-def main():
+def other():
 
     f = open(sys.argv[1],"r")
     contents = f.read()
@@ -76,6 +76,7 @@ def main():
         S1 = set(lettersList)
         uniqueLetters = list(S1)
         uniqueLetters.sort()
+#compares text file to  letters list
         for x in range(len(uniqueLetters)):
             lettersCount.append(lettersList.count(uniqueLetters[x]))
         lettersCountDict = {uniqueLetters[i]: lettersCount[i] for i in range(len(uniqueLetters))}

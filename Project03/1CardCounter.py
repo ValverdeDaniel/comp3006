@@ -16,6 +16,8 @@
 
 # alias for shuffle as shuffle
 from random import shuffle as shuffle
+#alias for copy as copy
+import copy as copy
 
 print('Welcome To the Card Counting Trainer, \n The idea is to simulate holding a deck of cards and trying to ')
 print('The rules of the game for cards with ranks are: ')
@@ -62,7 +64,8 @@ def game():
         print('Type in a number for the exact Hot Count I hope you are keeping track')
         a = input()
         try:
-            a = int(a)
+            #put a shallow copy just for homeworks sake
+            a = copy.copy(int(a))
             # if you set a = c.hotcount you can type any number and simulate what it feels like to win!
             # a = c.hotCount
             if a == c.hotCount:

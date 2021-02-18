@@ -1,3 +1,4 @@
+
 ###Background Information
 #The counting system works by keeping a running total in your head (hot Count) that tracks the ratio between high and low cards.
 # the counting system will have a positive running caount when the deck has more high cards than low cards.

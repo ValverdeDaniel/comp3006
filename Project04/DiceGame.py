@@ -1,3 +1,6 @@
+#Daniel Valverde
+#DU-ID 873527848
+
 import random as rand
 print('Welcome To the Game of War Dice')
 print('The rules are simple you will roll some dice versus a computer and the highest roll Wins!')

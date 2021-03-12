@@ -1,7 +1,9 @@
-#SHAPE Classes WORKING
+#Daniel Valverde
+#DU-ID 873527848
+#in this program we utilize class inheritance to display the area of multiple shapes
 
 import math
-
+#creating a shape class that the rest of the shapes inherit from
 class Shape:
     def __init__(self, name):
         self.name = name
@@ -11,7 +13,7 @@ class Shape:
 
     def area(self):
         pass
-
+#creating a rectangle class which square, paralellogram, and rhombus inherit from
 class Rectangle(Shape):
     def __init__(self, length, width):
         self.length = length
@@ -20,6 +22,7 @@ class Rectangle(Shape):
     def area(self):
         return self.length * self.width
 
+#inherits name from shape
 class Oval(Shape):
     def area(self, majorAxis, minorAxis):
         self.area = math.pi * (majorAxis/2) * (minorAxis/2)

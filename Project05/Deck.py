@@ -1,4 +1,6 @@
-
+#Daniel Valverde
+#DU-ID 873527848
+#in this program we utilize the zip function to zip together two lists into a list of tuples to build a deck of cards
 def main():
     suits = ['spades', 'hearts', 'diamonds', 'clubs']
     ranks = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
@@ -23,7 +25,7 @@ def main():
             y += 1
         y = 0
         x += 1
-
+#zipping lists of Ranks and suits together to create one final list of tuples
     deck = list(zip(tempR, tempS))
 
     print(deck)

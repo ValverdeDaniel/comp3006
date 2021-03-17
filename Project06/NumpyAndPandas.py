@@ -1,3 +1,5 @@
+#Daniel Valverde
+#DU-ID: 873527848
 import numpy as np
 import pandas as pd
 
